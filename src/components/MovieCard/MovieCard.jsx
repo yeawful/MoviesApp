@@ -10,16 +10,22 @@ export default function MovieCard({ src, title, description, date, voteAverage }
   const image = src ? `https://image.tmdb.org/t/p/w500${src}` : noImage;
   
   // Функция для сокращения текста описания
-  function trimString(descr, cardTitle = '') {
-    let trimLength = cardTitle.length > 46 ? 65 : cardTitle.length > 36 ? 115 : cardTitle.length > 18 ? 150 : 185;
-
-    if (descr.length <= trimLength) {
-      return descr;
-    } else {
-      return (
-        descr.slice(0, trimLength).split(' ').slice(0, -1).join(' ') + ' ...'
-      );
+  function trimDescription(descr, cardTitle = '') {
+    let baseTrimLength = 150;
+    
+    if (cardTitle.length > 30) {
+      baseTrimLength = 100;
     }
+    
+    if (cardTitle.length < 15) {
+      baseTrimLength = 200;
+    }
+
+    if (descr.length <= baseTrimLength) {
+      return descr;
+    }
+    
+    return descr.slice(0, baseTrimLength).split(' ').slice(0, -1).join(' ') + ' ...';
   }
 
   // Форматирование даты date-fns
@@ -47,13 +53,13 @@ export default function MovieCard({ src, title, description, date, voteAverage }
             </div>
 
             <div className="movie-card__description">
-              {trimString(description, title)}      
+              {trimDescription(description, title)}      
             </div>
 
-            <Rate className="movie-card__stars" count={10} />
+            <Rate className="movie-card__stars" allowHalf defaultValue={2.5} count={10} />
 
             <div className="movie-card__rate">
-              {voteAverage}
+              {voteAverage.toFixed(1)}
             </div>
           </div>
         </div>
