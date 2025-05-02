@@ -26,7 +26,7 @@ export default class MovieCard extends Component {
   render() {
     const { src, title, description, date, voteAverage } = this.props;
     const image = src ? `https://image.tmdb.org/t/p/w500${src}` : noImage;
-    const formatedDate = date ? <div className="movie_card__date">{format(new Date(date), 'PP')}</div> : null;
+    const formatedDate = date ? <div className="movie-card__date">{format(new Date(date), 'PP')}</div> : null;
 
     return (
       <Col xs={24} md={12}>
