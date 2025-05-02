@@ -2,8 +2,9 @@ import { Component } from 'react';
 import { Pagination, Alert } from 'antd';
 import 'antd/dist/reset.css';
 
-import CardList from '../CardList/CardList.jsx';
 import './App.scss';
+import CardList from '../CardList/CardList.jsx';
+
 
 export default class App extends Component {
   constructor() {

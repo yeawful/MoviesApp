@@ -1,8 +1,8 @@
 import { Component } from 'react';
 import { Row, Spin, Alert } from 'antd';
 
-import MoviesServiсe from '../../services/MoviesService.jsx';
 import MovieCard from '../MovieCard/MovieCard.jsx';
+import MoviesServiсe from '../../services/MoviesService.jsx';
 
 import './CardList.scss';
 
@@ -12,27 +12,29 @@ export default class CardList extends Component {
     this.moviesService = new MoviesServiсe();
     this.state = {
       movies: [],
-      loading: false,
-      error: null
+      isLoading: false,
+      isError: false
     };
+    this.errorDescription = 'Failed to load movies. Please try again later.';
   }
 
   fetchData = async () => {
     const { pageNumber, setTotalResults } = this.props;
-    
-    this.setState({ loading: true, error: null });
-    
+
+    this.setState({ isLoading: true, isError: false });
+
     try {
       const { movies, totalResults } = await this.moviesService.searchMovie(pageNumber);
       setTotalResults(totalResults);
-      this.setState({ movies, loading: false });
+      this.setState({ movies });
     } catch (error) {
       this.setState({ 
-        error: 'Failed to load movies. Please try again later.',
-        loading: false 
+        isError: true
       });
+    } finally {
+      this.setState({ isLoading: false });
     }
-  };
+  }
 
   componentDidMount() {
     this.fetchData();
@@ -45,31 +47,31 @@ export default class CardList extends Component {
   }
 
   render() {
-    const { movies, loading, error } = this.state;
+    const { movies, isLoading, isError } = this.state;
 
-    if (error) {
+    if (isError) {
       return (
-        <section className="card-list">
+        <div className="card-list">
           <Alert 
             message="Error" 
-            description={error} 
+            description={this.errorDescription} 
             type="error" 
             showIcon 
           />
-        </section>
+        </div>
       );
     }
 
-    if (loading) {
+    if (isLoading) {
       return (
-        <section className="card-list">
+        <div className="card-list">
           <Spin size="large" />
-        </section>
+        </div>
       );
     }
 
     return (
-      <section className="card-list">
+      <div className="card-list">
         <Row gutter={[32, 32]}>
           {movies?.map(movie => (
             <MovieCard
@@ -83,7 +85,7 @@ export default class CardList extends Component {
             />
           ))}
         </Row>
-      </section>
+      </div>
     );
   }
 }

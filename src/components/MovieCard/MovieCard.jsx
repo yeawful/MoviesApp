@@ -1,9 +1,8 @@
 import { Component } from 'react';
 import { Card, Col, Rate, Image } from 'antd';
 import { format } from 'date-fns';
-import noImage from '../../resources/img/no-image2.jpg';
-
 import './MovieCard.scss';
+import noImage from '../../resources/img/no-image2.jpg';
 
 export default class MovieCard extends Component {
   
