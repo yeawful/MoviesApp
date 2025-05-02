@@ -24,17 +24,22 @@
   flex-direction: column;
   flex-basis: 450px;
   flex-grow: 2;
-  max-width: 100%;
 }
 
 .movie-card__title {
   font-style: normal;
   font-weight: 400;
   font-size: 20px;
-  line-height: 28px;
+  line-height: 26px;
   margin-bottom: 6px;
   color: #000000;
   margin-right: 30px;
+
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .movie_card__date {
