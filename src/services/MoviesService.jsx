@@ -28,7 +28,7 @@ class MoviesServiсe {
   _transformMovies = (movies) => {
     return movies.map((movie) => ({
         id: movie.id,
-        title: movie.original_title,
+        title: movie.title,
         releaseDate: movie.release_date,
         description: movie.overview,
         posterSrc: movie.poster_path || null,
