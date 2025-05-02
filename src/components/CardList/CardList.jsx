@@ -1,5 +1,5 @@
 import { Component } from 'react';
-import { Row } from 'antd';
+import { Row, Spin, Alert } from 'antd';
 
 import MoviesServiсe from '../../services/MoviesService.jsx';
 import MovieCard from '../MovieCard/MovieCard.jsx';
@@ -11,16 +11,27 @@ export default class CardList extends Component {
     super(props);
     this.moviesService = new MoviesServiсe();
     this.state = {
-      movies: null
+      movies: [],
+      loading: false,
+      error: null
     };
   }
 
   fetchData = async () => {
-    const { pageNumber, setTotalResults } = this.props;  
-    const { movies, totalResults } = await this.moviesService.searchMovie(pageNumber);
-  
-    setTotalResults(totalResults);  
-    this.setState({ movies });
+    const { pageNumber, setTotalResults } = this.props;
+    
+    this.setState({ loading: true, error: null });
+    
+    try {
+      const { movies, totalResults } = await this.moviesService.searchMovie(pageNumber);
+      setTotalResults(totalResults);
+      this.setState({ movies, loading: false });
+    } catch (error) {
+      this.setState({ 
+        error: 'Failed to load movies. Please try again later.',
+        loading: false 
+      });
+    }
   };
 
   componentDidMount() {
@@ -34,7 +45,28 @@ export default class CardList extends Component {
   }
 
   render() {
-    const { movies } = this.state;
+    const { movies, loading, error } = this.state;
+
+    if (error) {
+      return (
+        <section className="card-list">
+          <Alert 
+            message="Error" 
+            description={error} 
+            type="error" 
+            showIcon 
+          />
+        </section>
+      );
+    }
+
+    if (loading) {
+      return (
+        <section className="card-list">
+          <Spin size="large" />
+        </section>
+      );
+    }
 
     return (
       <section className="card-list">
