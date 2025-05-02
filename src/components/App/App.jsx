@@ -15,12 +15,10 @@ export default class App extends Component {
     };
   }
 
-  // Обновление состояния pageNumber в пагинации
   handlePageChange = (pageNumber) => {
     this.setState({ pageNumber });
   };
 
-  // Обновление состояния totalResults в пагинации
   setTotalResults = (count) => {
     this.setState({ totalResults: count });
   };

@@ -15,21 +15,18 @@ export default class CardList extends Component {
     };
   }
 
-  // Получение данных о фильмах
   fetchData = async () => {
-    const { pageNumber } = this.props;
+    const { pageNumber, setTotalResults } = this.props;  
     const { movies, totalResults } = await this.moviesService.searchMovie(pageNumber);
-    
-    this.props.setTotalResults(totalResults);
+  
+    setTotalResults(totalResults);  
     this.setState({ movies });
   };
 
-  // Первоначальная загрузка данных
   componentDidMount() {
     this.fetchData();
   }
 
-  // Обновление данных при изменении номера страницы
   componentDidUpdate(prevProps) {
     if (this.props.pageNumber !== prevProps.pageNumber) {
       this.fetchData();
