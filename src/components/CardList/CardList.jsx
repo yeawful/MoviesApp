@@ -16,21 +16,20 @@ export default class CardList extends Component {
       isError: false
     };
     this.errorDescription = 'Failed to load movies. Please try again later.';
+    this.noMoviesDescription = 'Please enter another search query.';
   }
 
   fetchData = async () => {
-    const { pageNumber, setTotalResults } = this.props;
+    const { pageNumber, searchQuery, setTotalResults } = this.props;
 
     this.setState({ isLoading: true, isError: false });
 
     try {
-      const { movies, totalResults } = await this.moviesService.searchMovie(pageNumber);
+      const { movies, totalResults } = await this.moviesService.searchMovie(pageNumber, searchQuery);
       setTotalResults(totalResults);
       this.setState({ movies });
     } catch (error) {
-      this.setState({ 
-        isError: true
-      });
+      this.setState({ isError: true});
     } finally {
       this.setState({ isLoading: false });
     }
@@ -41,7 +40,10 @@ export default class CardList extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.pageNumber !== prevProps.pageNumber) {
+    if (
+      this.props.pageNumber !== prevProps.pageNumber ||
+      this.props.searchQuery !== prevProps.searchQuery
+    ) {
       this.fetchData();
     }
   }
@@ -56,7 +58,8 @@ export default class CardList extends Component {
             message="Error" 
             description={this.errorDescription} 
             type="error" 
-            showIcon 
+            showIcon
+            closable
           />
         </div>
       );
@@ -70,6 +73,18 @@ export default class CardList extends Component {
       );
     }
 
+    if (movies.length === 0) {
+      return (
+        <Alert 
+          message="No movies found" 
+          description={this.noMoviesDescription} 
+          type="info"
+          showIcon
+          closable
+        />
+      );
+    }
+      
     return (
       <section className="card-list">
         <Row gutter={[32, 32]}>

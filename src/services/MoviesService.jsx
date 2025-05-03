@@ -13,8 +13,9 @@ class MoviesServiсe {
     return await res.json();
   }
 
-  searchMovie = async (page, query = this._defaultSearch) => {
-    const res = await this.getResource(`${this._apiBase}/search/movie?${this._apiKey}&query=${query}&page=${page}&language=en-US`);
+  searchMovie = async (page, query = '') => {
+    const searchQuery = query || this._defaultSearch;
+    const res = await this.getResource(`${this._apiBase}/search/movie?${this._apiKey}&query=${searchQuery}&page=${page}&language=en-US`);
     return {
         movies: this._transformMovies(res.results),
         totalResults: res.total_results,
@@ -29,7 +30,7 @@ class MoviesServiсe {
     description: movie.overview,
     posterSrc: movie.poster_path || null,
     genreIds: movie.genre_ids,
-    voteAverage: movie.vote_average
+    voteAverage: movie.vote_average || 0,
   }));
 }
 
