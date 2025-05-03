@@ -42,7 +42,7 @@ export default class App extends Component {
     const { pageNumber, totalResults, isOnline } = this.state;
 
     return (
-      <div className="app">
+      <main className="app">
         {!isOnline && (
           <Alert
             type="warning"
@@ -69,7 +69,7 @@ export default class App extends Component {
           pageSize={20}
           showSizeChanger={false}
         />
-      </div>
+      </main>
     );
   }
 }

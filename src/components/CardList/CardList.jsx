@@ -71,7 +71,7 @@ export default class CardList extends Component {
     }
 
     return (
-      <div className="card-list">
+      <section className="card-list">
         <Row gutter={[32, 32]}>
           {movies?.map(movie => (
             <MovieCard
@@ -85,7 +85,7 @@ export default class CardList extends Component {
             />
           ))}
         </Row>
-      </div>
+      </section>
     );
   }
 }
