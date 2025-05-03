@@ -1,8 +1,8 @@
 import { Component } from 'react';
-import { Row } from 'antd';
+import { Row, Spin, Alert } from 'antd';
 
-import MoviesServiсe from '../../services/MoviesService.jsx';
 import MovieCard from '../MovieCard/MovieCard.jsx';
+import MoviesServiсe from '../../services/MoviesService.jsx';
 
 import './CardList.scss';
 
@@ -11,17 +11,30 @@ export default class CardList extends Component {
     super(props);
     this.moviesService = new MoviesServiсe();
     this.state = {
-      movies: null
+      movies: [],
+      isLoading: false,
+      isError: false
     };
+    this.errorDescription = 'Failed to load movies. Please try again later.';
   }
 
   fetchData = async () => {
-    const { pageNumber, setTotalResults } = this.props;  
-    const { movies, totalResults } = await this.moviesService.searchMovie(pageNumber);
-  
-    setTotalResults(totalResults);  
-    this.setState({ movies });
-  };
+    const { pageNumber, setTotalResults } = this.props;
+
+    this.setState({ isLoading: true, isError: false });
+
+    try {
+      const { movies, totalResults } = await this.moviesService.searchMovie(pageNumber);
+      setTotalResults(totalResults);
+      this.setState({ movies });
+    } catch (error) {
+      this.setState({ 
+        isError: true
+      });
+    } finally {
+      this.setState({ isLoading: false });
+    }
+  }
 
   componentDidMount() {
     this.fetchData();
@@ -34,10 +47,31 @@ export default class CardList extends Component {
   }
 
   render() {
-    const { movies } = this.state;
+    const { movies, isLoading, isError } = this.state;
+
+    if (isError) {
+      return (
+        <div className="card-list">
+          <Alert 
+            message="Error" 
+            description={this.errorDescription} 
+            type="error" 
+            showIcon 
+          />
+        </div>
+      );
+    }
+
+    if (isLoading) {
+      return (
+        <div className="card-list">
+          <Spin size="large" />
+        </div>
+      );
+    }
 
     return (
-      <section className="card-list">
+      <div className="card-list">
         <Row gutter={[32, 32]}>
           {movies?.map(movie => (
             <MovieCard
@@ -51,7 +85,7 @@ export default class CardList extends Component {
             />
           ))}
         </Row>
-      </section>
+      </div>
     );
   }
 }
